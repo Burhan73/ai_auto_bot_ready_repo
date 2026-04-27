@@ -1,35 +1,41 @@
-name: Secure AI Commander
+name: AI Commander Pro
 on:
   workflow_dispatch:
     inputs:
-      action:
-        description: 'Hangi AI operasyonunu yapayım?'
+      command:
+        description: 'Yapılacak İşlem'
         required: true
-        default: 'status'
+        default: 'notify'
         type: choice
         options:
-          - status
           - notify
           - lock
-          - gemini_check
+          - list_files
+          - speak
+      message:
+        description: 'Mesaj veya Gemini Sorusu'
+        required: false
+        default: 'Sistem aktif!'
 
 jobs:
   ai-operation:
     runs-on: self-hosted
     steps:
-      - name: Komutu Yürüt
+      - name: Execute Super Powers
         run: |
-          case "${{ github.event.inputs.action }}" in
-            "status")
-              top -l 1 | head -n 10
-              ;;
+          case "${{ github.event.inputs.command }}" in
             "notify")
-              osascript -e 'display notification "GitHub Komut Merkezi: İşlem Başarılı!" with title "AI Commander"'
+              osascript -e 'display notification "${{ github.event.inputs.message }}" with title "AI Commander"'
               ;;
             "lock")
+              echo "MacBook Kilitleniyor..."
               pmset displaysleepnow
               ;;
-            "gemini_check")
-              gemini --version || echo "Gemini CLI hazir!"
+            "list_files")
+              echo "Masaüstündeki Dosyalar:"
+              ls ~/Desktop
+              ;;
+            "speak")
+              say "${{ github.event.inputs.message }}"
               ;;
           esac
