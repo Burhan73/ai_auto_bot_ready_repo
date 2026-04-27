@@ -1,0 +1,35 @@
+name: Secure AI Commander
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'Hangi AI operasyonunu yapayım?'
+        required: true
+        default: 'status'
+        type: choice
+        options:
+          - status
+          - notify
+          - lock
+          - gemini_check
+
+jobs:
+  ai-operation:
+    runs-on: self-hosted
+    steps:
+      - name: Komutu Yürüt
+        run: |
+          case "${{ github.event.inputs.action }}" in
+            "status")
+              top -l 1 | head -n 10
+              ;;
+            "notify")
+              osascript -e 'display notification "GitHub Komut Merkezi: İşlem Başarılı!" with title "AI Commander"'
+              ;;
+            "lock")
+              pmset displaysleepnow
+              ;;
+            "gemini_check")
+              gemini --version || echo "Gemini CLI hazir!"
+              ;;
+          esac
