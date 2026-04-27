@@ -3,15 +3,17 @@ on:
   workflow_dispatch:
     inputs:
       command:
+        description: 'Yapilacak Islem'
         type: choice
-        description: 'Yapılacak Islem'
+        required: true
+        default: 'notify'
         options:
           - notify
           - lock
           - list_files
           - speak
       message:
-        description: 'Mesaj veya Gemini Sorusu'
+        description: 'Mesajiniz'
         required: false
         default: 'Sistem aktif!'
 
@@ -19,18 +21,16 @@ jobs:
   ai-operation:
     runs-on: self-hosted
     steps:
-      - name: Execute Super Powers
+      - name: Execute
         run: |
           case "${{ github.event.inputs.command }}" in
             "notify")
               osascript -e 'display notification "${{ github.event.inputs.message }}" with title "AI Commander"'
               ;;
             "lock")
-              echo "MacBook Kilitleniyor..."
               pmset displaysleepnow
               ;;
             "list_files")
-              echo "Masaüstündeki Dosyalar:"
               ls ~/Desktop
               ;;
             "speak")
