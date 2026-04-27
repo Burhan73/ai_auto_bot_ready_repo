@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       command:
-        description: 'Yapilacak Islem'
+        description: 'Islem'
         type: choice
         required: true
         default: 'notify'
@@ -17,42 +17,42 @@ on:
           - music_play
           - empty_trash
       message:
-        description: 'Mesajiniz'
+        description: 'Mesaj'
         required: false
-        default: 'Sistem aktif!'
+        default: 'Sistem aktif'
 
 jobs:
   ai-operation:
     runs-on: self-hosted
     steps:
-      - name: Bildirim Gonder
+      - name: Bildirim
         if: github.event.inputs.command == 'notify'
-        run: osascript -e 'display notification "${{ github.event.inputs.message }}" with title "AI Commander"'
+        run: osascript -e 'display notification "${{ github.event.inputs.message }}"'
 
-      - name: Ekrani Kilitle
+      - name: Kilitle
         if: github.event.inputs.command == 'lock'
         run: pmset displaysleepnow
 
-      - name: Dosyalari Listele
+      - name: Liste
         if: github.event.inputs.command == 'list_files'
         run: ls ~/Desktop
 
-      - name: Konustur
+      - name: Konus
         if: github.event.inputs.command == 'speak'
         run: say "${{ github.event.inputs.message }}"
 
-      - name: Ekran Goruntusu Al
+      - name: Foto
         if: github.event.inputs.command == 'screenshot'
         run: screencapture ~/Desktop/AI_Screencapture.png
 
-      - name: Sesi Full Yap
+      - name: Ses
         if: github.event.inputs.command == 'volume'
-        run: osascript -e "set volume output volume 100" -e "set volume 7"
+        run: osascript -e 'set volume output volume 100'
 
-      - name: Muzik Cal
+      - name: Muzik
         if: github.event.inputs.command == 'music_play'
-        run: osascript -e 'tell application "Music" to play next track'
+        run: osascript -e 'tell application "Music" to play'
 
-      - name: Copu Bosalt
+      - name: Cop
         if: github.event.inputs.command == 'empty_trash'
         run: osascript -e 'tell application "Finder" to empty trash'
