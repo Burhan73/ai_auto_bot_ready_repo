@@ -12,8 +12,12 @@ on:
           - lock
           - list_files
           - speak
+          - screenshot
+          - volume
+          - music_play
+          - empty_trash
       message:
-        description: 'Mesajiniz'
+        description: 'Mesajiniz (speak veya notify için)'
         required: false
         default: 'Sistem aktif!'
 
@@ -36,3 +40,19 @@ jobs:
       - name: Konuştur
         if: github.event.inputs.command == 'speak'
         run: say "${{ github.event.inputs.message }}"
+
+      - name: Ekran Görüntüsü Al
+        if: github.event.inputs.command == 'screenshot'
+        run: screencapture ~/Desktop/AI_Screencapture.png
+
+      - name: Sesi Full Yap
+        if: github.event.inputs.command == 'volume'
+        run: osascript -e "set volume output volume 100"
+
+      - name: Müzik Çal
+        if: github.event.inputs.command == 'music_play'
+        run: osascript -e 'tell application "Music" to play next track'
+
+      - name: Çöpü Boşalt
+        if: github.event.inputs.command == 'empty_trash'
+        run: osascript -e 'tell application "Finder" to empty trash'
