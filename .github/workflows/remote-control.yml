@@ -25,34 +25,31 @@ jobs:
   ai-operation:
     runs-on: self-hosted
     steps:
-      - name: Bildirim
-        if: github.event.inputs.command == 'notify'
-        run: osascript -e "display notification \"${{ github.event.inputs.message }}\" with title \"AI Commander\""
-
-      - name: Kilitle
-        if: github.event.inputs.command == 'lock'
-        run: pmset displaysleepnow
-
-      - name: Liste
-        if: github.event.inputs.command == 'list_files'
-        run: ls ~/Desktop
-
-      - name: Konus
-        if: github.event.inputs.command == 'speak'
-        run: say "${{ github.event.inputs.message }}"
-
-      - name: Foto
-        if: github.event.inputs.command == 'screenshot'
-        run: screencapture ~/Desktop/AI_Screen.png
-
-      - name: Ses
-        if: github.event.inputs.command == 'volume'
-        run: osascript -e "set volume output volume 100"
-
-      - name: Muzik
-        if: github.event.inputs.command == 'music_play'
-        run: osascript -e "tell application \"Music\" to play next track"
-
-      - name: Cop
-        if: github.event.inputs.command == 'empty_trash'
-        run: osascript -e "tell application \"Finder\" to empty trash"
+      - name: Komut Calistir
+        run: |
+          case "${{ github.event.inputs.command }}" in
+            "notify")
+              osascript -e "display notification \"${{ github.event.inputs.message }}\" with title \"AI Commander\""
+              ;;
+            "lock")
+              pmset displaysleepnow
+              ;;
+            "list_files")
+              ls ~/Desktop
+              ;;
+            "speak")
+              say "${{ github.event.inputs.message }}"
+              ;;
+            "screenshot")
+              screencapture ~/Desktop/AI_Screen.png
+              ;;
+            "volume")
+              osascript -e "set volume output volume 100"
+              ;;
+            "music_play")
+              osascript -e "tell application \"Music\" to play next track"
+              ;;
+            "empty_trash")
+              osascript -e "tell application \"Finder\" to empty trash"
+              ;;
+          esac
