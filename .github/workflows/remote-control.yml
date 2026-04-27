@@ -27,7 +27,12 @@ jobs:
     steps:
       - name: Bildirim Gönder
         if: github.event.inputs.command == 'notify'
-        run: osascript -e 'display notification "${{ github.event.inputs.message }}" with title "AI Commander"'
+       - name: Sesi Full Yap
+        if: github.event.inputs.command == 'volume'
+        run: |
+          osascript -e "set volume output volume 100"
+          osascript -e "set volume 7"
+          say "Ses seviyesi maksimuma cikarildi"
 
       - name: Ekranı Kilitle
         if: github.event.inputs.command == 'lock'
