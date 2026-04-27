@@ -23,17 +23,15 @@ jobs:
     steps:
       - name: Execute
         run: |
-          case "${{ github.event.inputs.command }}" in
-            "notify")
-              osascript -e 'display notification "${{ github.event.inputs.message }}" with title "AI Commander"'
-              ;;
-            "lock")
-              pmset displaysleepnow
-              ;;
-            "list_files")
-              ls ~/Desktop
-              ;;
-            "speak")
-              say "${{ github.event.inputs.message }}"
-              ;;
-          esac
+          CMD="${{ github.event.inputs.command }}"
+          MSG="${{ github.event.inputs.message }}"
+          
+          if [ "$CMD" == "notify" ]; then
+            osascript -e "display notification \"$MSG\" with title \"AI Commander\""
+          elif [ "$CMD" == "lock" ]; then
+            pmset displaysleepnow
+          elif [ "$CMD" == "list_files" ]; then
+            ls ~/Desktop
+          elif [ "$CMD" == "speak" ]; then
+            say "$MSG"
+          fi
