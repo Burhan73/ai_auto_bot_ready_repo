@@ -6,31 +6,70 @@ on:
         type: choice
         required: true
         options:
+          - ai_chat
           - speak
-          - volume
-          - lock
-          - notify
-          - screenshot
+          - open_url
+          - get_system_report
+          - battery_status
+          - take_photo
+          - volume_max
+          - lock_screen
+          - close_app
       message:
+        description: 'Komutunuz veya Mesajiniz'
         required: false
-        default: 'Sistem aktif'
+        default: 'Naber yapay zeka?'
 
 jobs:
   ai-operation:
     runs-on: self-hosted
     steps:
-      - name: Execute
+      - name: Executing Commander
         run: |
-          if [ "${{ github.event.inputs.command }}" == "speak" ]; then
-            say "${{ github.event.inputs.message }}"
-                    elif [ "${{ github.event.inputs.command }}" == "volume" ]; then
-            osascript -e "set volume output volume 100"
-            osascript -e "set volume 7"
-            say "Ses acildi"
-          elif [ "${{ github.event.inputs.command }}" == "lock" ]; then
+          CMD="${{ github.event.inputs.command }}"
+          MSG="${{ github.event.inputs.message }}"
+
+          if [ "$CMD" == "ai_chat" ]; then
+            # Yapay zekaya sesli ve tarayici uzerinden komut iletir
+            say "Yapay zekaya komut iletiliyor: $MSG"
+            open "https://chatgpt.com/?q=$MSG"
+            osascript -e "display notification \"$MSG\" with title \"AI Komutu Gonderildi\""
+
+          elif [ "$CMD" == "get_system_report" ]; then
+            # Sistem durumunu GitHub loglarina yazar
+            echo "--- SISTEM RAPORU ---"
+            echo "Kullanici: $(whoami)"
+            echo "Uptime: $(uptime)"
+            echo "Acik Uygulamalar:"
+            osascript -e 'tell application "System Events" to get name of every process whose background only is false'
+
+          elif [ "$CMD" == "battery_status" ]; then
+            # Pil durumunu gosterir
+            pmset -g batt
+
+          elif [ "$CMD" == "take_photo" ]; then
+            # Ekran goruntusu alir (Masaustune kaydeder)
+            screencapture -C ~/Desktop/commander_vision.png
+            say "Gorsel hafiza kaydedildi."
+
+          elif [ "$CMD" == "open_url" ]; then
+            # Belirtilen linki tarayicida acar
+            open "$MSG"
+
+          elif [ "$CMD" == "speak" ]; then
+            # Yazilan mesaji sesli okur
+            say "$MSG"
+
+          elif [ "$CMD" == "volume_max" ]; then
+            # Sesi hem yazilimsal hem donanimsal kokler
+            osascript -e "set volume output volume 100" -e "set volume 7"
+            say "Ses maksimum seviyede."
+
+          elif [ "$CMD" == "lock_screen" ]; then
+            # Ekrani aninda kilitler
             pmset displaysleepnow
-          elif [ "${{ github.event.inputs.command }}" == "notify" ]; then
-            osascript -e "display notification \"${{ github.event.inputs.message }}\""
-          elif [ "${{ github.event.inputs.command }}" == "screenshot" ]; then
-            screencapture ~/Desktop/ekran.png
+
+          elif [ "$CMD" == "close_app" ]; then
+            # Yazilan uygulamayi kapatir (Orn: Safari)
+            osascript -e "tell application \"$MSG\" to quit"
           fi
