@@ -1,0 +1,34 @@
+name: AI Commander Pro
+on:
+  workflow_dispatch:
+    inputs:
+      command:
+        type: choice
+        required: true
+        options:
+          - speak
+          - volume
+          - lock
+          - notify
+          - screenshot
+      message:
+        required: false
+        default: 'Sistem aktif'
+
+jobs:
+  ai-operation:
+    runs-on: self-hosted
+    steps:
+      - name: Execute
+        run: |
+          if [ "${{ github.event.inputs.command }}" == "speak" ]; then
+            say "${{ github.event.inputs.message }}"
+          elif [ "${{ github.event.inputs.command }}" == "volume" ]; then
+            osascript -e "set volume output volume 100"
+          elif [ "${{ github.event.inputs.command }}" == "lock" ]; then
+            pmset displaysleepnow
+          elif [ "${{ github.event.inputs.command }}" == "notify" ]; then
+            osascript -e "display notification \"${{ github.event.inputs.message }}\""
+          elif [ "${{ github.event.inputs.command }}" == "screenshot" ]; then
+            screencapture ~/Desktop/ekran.png
+          fi
