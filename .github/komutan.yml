@@ -14,7 +14,7 @@ on:
           - take_photo
           - volume_max
           - lock_screen
-          - close_app
+          - close_app 
       message:
         description: 'Komutunuz veya Mesajiniz'
         required: false
