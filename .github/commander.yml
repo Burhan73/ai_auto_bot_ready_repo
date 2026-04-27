@@ -1,4 +1,5 @@
 name: AI Commander Pro
+# Son Guncelleme: v2.1
 on:
   workflow_dispatch:
     inputs:
