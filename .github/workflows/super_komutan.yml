@@ -1,0 +1,61 @@
+name: AI_Super_Commander
+on:
+  workflow_dispatch:
+    inputs:
+      command:
+        type: choice
+        required: true
+        options:
+          - ai_chat
+          - speak
+          - open_url
+          - get_system_report
+          - battery_status
+          - take_photo
+          - volume_max
+          - lock_screen
+          - close_app
+      message:
+        description: 'Mesaj veya URL'
+        required: false
+        default: 'Sistem Hazir'
+
+jobs:
+  exec-job:
+    runs-on: self-hosted
+    steps:
+      - name: Run Script
+        run: |
+          CMD="${{ github.event.inputs.command }}"
+          MSG="${{ github.event.inputs.message }}"
+          
+          case "$CMD" in
+            "ai_chat")
+              say "AI komutu: $MSG"
+              open "https://chatgpt.com/?q=$MSG"
+              ;;
+            "speak")
+              say "$MSG"
+              ;;
+            "open_url")
+              open "$MSG"
+              ;;
+            "get_system_report")
+              osascript -e 'tell application "System Events" to get name of every process whose background only is false'
+              ;;
+            "battery_status")
+              pmset -g batt
+              ;;
+            "take_photo")
+              screencapture ~/Desktop/komutan_ekran.png
+              ;;
+            "volume_max")
+              osascript -e "set volume output volume 100" -e "set volume 7"
+              ;;
+            "lock_screen")
+              pmset displaysleepnow
+              ;;
+            "close_app")
+              osascript -e "tell application \"$MSG\" to quit"
+              ;;
+          esac
