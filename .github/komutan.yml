@@ -23,8 +23,10 @@ jobs:
         run: |
           if [ "${{ github.event.inputs.command }}" == "speak" ]; then
             say "${{ github.event.inputs.message }}"
-          elif [ "${{ github.event.inputs.command }}" == "volume" ]; then
+                    elif [ "${{ github.event.inputs.command }}" == "volume" ]; then
             osascript -e "set volume output volume 100"
+            osascript -e "set volume 7"
+            say "Ses acildi"
           elif [ "${{ github.event.inputs.command }}" == "lock" ]; then
             pmset displaysleepnow
           elif [ "${{ github.event.inputs.command }}" == "notify" ]; then
